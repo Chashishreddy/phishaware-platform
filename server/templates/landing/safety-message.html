@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Training Confirmation</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #f9fafc; }
+      .container { background: #fff; padding: 2rem; border-radius: 8px; max-width: 640px; margin: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+      .notice { background: #fff3cd; border-left: 4px solid #ff9800; padding: 1rem; margin-top: 1rem; }
+      button { background: #1b5e20; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; }
+      .secondary { background: transparent; color: #1b5e20; border: 1px solid #1b5e20; margin-left: 0.75rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Preference Confirmation</h1>
+      <p>Please confirm how we should handle your package delivery. No real credentials are requested—this is an awareness exercise.</p>
+      <form id="sim-form">
+        <label>Delivery preference</label>
+        <select name="preference">
+          <option value="hold">Hold for pickup</option>
+          <option value="deliver">Deliver to desk</option>
+        </select>
+        <button type="submit">Submit</button>
+        <button type="button" id="report-btn" class="secondary">I think this is malicious</button>
+      </form>
+      <div class="notice" id="notice" style="display:none;">
+        <h2>Simulation Notice</h2>
+        <p>This was a simulated phishing awareness exercise. Please review the debrief that will be emailed to you shortly. If you felt uncertain or need support, contact security@company.test.</p>
+      </div>
+    </div>
+    <script>
+      const showNotice = () => {
+        document.getElementById('notice').style.display = 'block';
+      };
+      document.getElementById('sim-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        await fetch('/simulate/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: {{campaign_id}}, email: '{{email}}' }) });
+        showNotice();
+      });
+      document.getElementById('report-btn').addEventListener('click', showNotice);
+      if (new URLSearchParams(window.location.search).get('debug') === '1') {
+        showNotice();
+      }
+    </script>
+  </body>
+</html>

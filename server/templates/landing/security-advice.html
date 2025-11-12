@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Security Awareness Check</title>
+    <style>
+      body { font-family: Arial, sans-serif; background: #eef2f7; margin: 0; }
+      .container { padding: 3rem; max-width: 720px; margin: auto; }
+      .card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+      .alert { background: #e8f5e9; border-left: 4px solid #1b5e20; padding: 1rem; margin-top: 1.5rem; }
+      button { background: #1b5e20; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; }
+      .secondary { background: transparent; color: #1b5e20; border: 1px solid #1b5e20; margin-left: 0.75rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>Security Reminder</h1>
+        <p>Please review the key points below and acknowledge. This page never collects real passwords; if you are asked for one elsewhere, stop and report it.</p>
+        <ul>
+          <li>Use approved password managers.</li>
+          <li>Report unexpected login prompts.</li>
+          <li>Escalate unusual requests from leadership.</li>
+        </ul>
+        <form id="ack-form">
+          <label>
+            <input type="checkbox" required /> I understand this security reminder.
+          </label>
+          <button type="submit">Acknowledge</button>
+          <button type="button" id="report" class="secondary">Report concern</button>
+        </form>
+        <div class="alert" id="alert" style="display:none;">
+          <h2>Simulation Notice</h2>
+          <p>This exercise tests awareness of suspicious emails. A detailed debrief will follow. Share feedback with security@company.test.</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const showAlert = () => {
+        document.getElementById('alert').style.display = 'block';
+      };
+      document.getElementById('ack-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await fetch('/simulate/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: {{campaign_id}}, email: '{{email}}', requestedSupport: false }) });
+        showAlert();
+      });
+      document.getElementById('report').addEventListener('click', showAlert);
+      if (new URLSearchParams(window.location.search).get('debug') === '1') {
+        showAlert();
+      }
+    </script>
+  </body>
+</html>
